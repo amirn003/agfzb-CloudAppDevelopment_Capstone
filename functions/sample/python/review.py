@@ -1,26 +1,12 @@
-"""IBM Cloud Function that post reviews for a dealership
-
-"""
 from ibmcloudant.cloudant_v1 import CloudantV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
-
 def main(params):
-    """Main Function
-
-    Args:
-        param_dict (Dict): input paramater
-
-    Returns:
-        _type_: _description_ TODO
-    """
-
-    url="https://39c5ae9d-7f45-4c94-bb02-22a7ce000df0-bluemix.cloudantnosqldb.appdomain.cloud"
+    url = "https://39c5ae9d-7f45-4c94-bb02-22a7ce000df0-bluemix.cloudantnosqldb.appdomain.cloud"
     authenticator = IAMAuthenticator("_jmHxOs2-RLKmlfJ2JjQRzEzZ1mnl5bm3SS15Zv66N6d")
     service = CloudantV1(authenticator=authenticator)
     service.set_service_url(url)
 
-    # Specify the database name
     db_name = 'reviews'
 
     if 'review' in params:
@@ -60,7 +46,7 @@ def main(params):
                 }
             }
             return result
-        except Exception:
+        except ValueError as e:
             result = {
                 'statusCode': 500,
                 'message': 'Failed to post review'
