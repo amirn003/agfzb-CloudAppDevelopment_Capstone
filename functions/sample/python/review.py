@@ -33,39 +33,39 @@ def main(params):
                 'body': {'data': response}
             }
             return result
-        else:
-            review = params['review']
-            new_review = {
-                'id': int(review['id']),
-                'name': review['name'],
-                'dealership': int(review['dealership']),
-                'review': review['review'],
-                'purchase': review['purchase'],
-                'another': review['another'],
-                'purchase_date': review['purchase_date'],
-                'car_make': review['car_make'],
-                'car_model': review['car_model'],
-                'car_year': int(review['car_year'])
+
+        review = params['review']
+        new_review = {
+            'id': int(review['id']),
+            'name': review['name'],
+            'dealership': int(review['dealership']),
+            'review': review['review'],
+            'purchase': review['purchase'],
+            'another': review['another'],
+            'purchase_date': review['purchase_date'],
+            'car_make': review['car_make'],
+            'car_model': review['car_model'],
+            'car_year': int(review['car_year'])
+        }
+        try:
+            response = service.post_document(
+                db=db_name,
+                document=new_review
+            ).get_result()
+            result = {
+                'statusCode': 200,
+                'body': {
+                    'message': 'Review posted successfully',
+                    'data': response
+                }
             }
-            try:
-                response = service.post_document(
-                    db=db_name,
-                    document=new_review
-                ).get_result()
-                result = {
-                    'statusCode': 200,
-                    'body': {
-                        'message': 'Review posted successfully',
-                        'data': response
-                    }
-                }
-                return result
-            except Exception:
-                result = {
-                    'statusCode': 500,
-                    'message': 'Failed to post review'
-                }
-                return result
+            return result
+        except Exception:
+            result = {
+                'statusCode': 500,
+                'message': 'Failed to post review'
+            }
+            return result
     else:
         result = {
             'statusCode': 400,
