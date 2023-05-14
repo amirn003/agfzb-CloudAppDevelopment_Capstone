@@ -58,7 +58,7 @@ def main(params):
                 }
             }
             return result
-        except ValueError as exception:
+        except ValueError:
             result = {
                 'statusCode': 500,
                 'message': 'Failed to post review'
