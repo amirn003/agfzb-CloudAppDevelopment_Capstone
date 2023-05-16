@@ -9,6 +9,7 @@ urlpatterns = [
     # view refers to the view function
     # name the URL
     path('view/', views.static_page, name='my-view'),
+    path('index/', views.get_index, name='index'),
     # path for about view
     path('about/', views.about, name='about'),
     # path for contact us view
