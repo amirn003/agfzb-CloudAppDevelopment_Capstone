@@ -24,8 +24,8 @@ def main(input_dict):
             'body': {'data':response}
             }
         return result
-    except builtins.Exception:
+    except Exception as e:
         return {
             'statusCode': 404,
-            'message': 'Something went wrong'
+            'message': str(e)
             }
