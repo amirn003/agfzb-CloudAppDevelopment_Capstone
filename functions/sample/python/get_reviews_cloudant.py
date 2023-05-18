@@ -1,11 +1,10 @@
 '''
 Module to get reviews by dealership in CloudantV1
 '''
-import sys
 from ibmcloudant.cloudant_v1 import CloudantV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
-def main(dict):
+def main(input_dict):
     '''
     Main return json with the content from the reviews
     '''
@@ -15,7 +14,7 @@ def main(dict):
     service.set_service_url(url)
     response = service.post_find(
                 db='reviews',
-                selector={'dealership': int(dict['id'])},
+                selector={'dealership': int(input_dict['id'])},
             ).get_result()
 
     try:
@@ -24,7 +23,7 @@ def main(dict):
             'body': {'data':response}
             }
         return result
-    except:
+    except builtins.Exception:
         return {
             'statusCode': 404,
             'message': 'Something went wrong'
