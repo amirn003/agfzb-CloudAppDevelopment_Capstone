@@ -1,7 +1,6 @@
 '''
 Module to get reviews by dealership in CloudantV1
 '''
-import builtins
 from ibmcloudant.cloudant_v1 import CloudantV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
@@ -24,8 +23,8 @@ def main(input_dict):
             'body': {'data':response}
             }
         return result
-    except Exception as e:
+    except ValueError:
         return {
             'statusCode': 404,
-            'message': str(e)
+            'message': 'Something went wrong'
             }
