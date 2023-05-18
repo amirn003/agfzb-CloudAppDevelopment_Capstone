@@ -2,7 +2,7 @@ import requests
 import json
 # import related models here
 from requests.auth import HTTPBasicAuth
-from .models import CarDealer
+from .models import CarDealer, DealerReview
 
 
 # Create a `get_request` to make HTTP GET requests
@@ -35,16 +35,11 @@ def get_dealers_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
     json_result = get_request(url)
-    #print(json_result)
     if json_result:
-        # Get the row list in JSON as dealers
-        #dealers = json_result[0]
-        dealers = json_result
         # For each dealer object
-        for dealer in dealers:
+        for dealer in json_result:
             # Get its content in `doc` object
             dealer_doc = dealer["doc"]
-            #print(dealer_doc["city"])
 
             # Create a CarDealer object with values in `doc` object
             dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
@@ -61,20 +56,13 @@ def get_dealer_by_id(url, dealerId, **kwargs):
     results = []
     dealerId = int(dealerId)
     # Call get_request with a URL parameter
-    #json_result = get_request(url, dealerId=dealerId)
     json_result = get_request(url)
-    #print(json_result)
     if json_result:
-        # Get the row list in JSON as dealers
-        #dealers = json_result[0]
-        dealers = json_result
         # For each dealer object
-        for dealer in dealers:
+        for dealer in json_result:
             # Get its content in `doc` object
             dealer_doc = dealer["doc"]
-
             if dealer_doc["id"] == dealerId:
-                print(dealer_doc["city"])
                 # Create a CarDealer object with values in `doc` object
                 dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
                                     id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
@@ -90,6 +78,32 @@ def get_dealer_by_id(url, dealerId, **kwargs):
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
+
+def get_dealer_by_id_from_cf(url, dealerId, **kwargs):
+    results = []
+    dealerId = int(dealerId)
+    # Call get_request with a URL parameter
+    #json_result = get_request(url, dealerId=dealerId)
+    json_result = get_request(url)
+    #print(json_result)
+    if json_result:
+        # Get the row list in JSON as reviews
+        reviews = json_result["data"]["docs"]
+        # For each review object
+        for review_doc in reviews:
+            # Get its content in `doc` object
+            #print(review_doc)
+            # Create a DealerReview object with values in `doc` object
+            #  name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, id):
+
+            review_obj = DealerReview(name=review_doc["name"], purchase=review_doc["purchase"], review=review_doc["review"],
+                                purchase_date=review_doc["purchase_date"], car_make=review_doc["car_make"], car_model=review_doc["car_model"],
+                                car_year=review_doc["car_year"], sentiment="", id=review_doc["id"])
+            #print(review_doc["full_name"])
+            #print(review_obj)
+            results.append(review_obj)
+
+    return results
 
 
 
