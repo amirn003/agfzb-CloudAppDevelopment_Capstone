@@ -22,7 +22,7 @@ def get_request(url, **kwargs):
             params["version"] = kwargs["version"]
             params["features"] = kwargs["features"]
             params["return_analyzed_text"] = kwargs["return_analyzed_text"]
-            requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+            response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', api_key))
         else:
             # Call get method of requests library with URL and parameters
@@ -38,6 +38,23 @@ def get_request(url, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
+
+def post_request(url, json_payload, **kwargs):
+    print(kwargs)
+    print("POST from {} ".format(url))
+
+    try:
+        response = requests.post(url, data=json_payload, headers={'Content-Type': 'application/json'})
+
+    except:
+        print("Network exception occurred")
+
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
+
+    return json_data
 
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
@@ -92,13 +109,15 @@ def get_dealer_by_id(url, dealerId, **kwargs):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
 
-def get_dealer_by_id_from_cf(url, dealerId, **kwargs):
+def get_dealer_by_id_from_cf(url, **kwargs):
     results = []
-    dealerId = int(dealerId)
+    dealer_id = int(kwargs.get("id"))
+    if id:
+        json_result = get_request(url, id=dealer_id)
+    else:
+        json_result = get_request(url)
     # Call get_request with a URL parameter
-    #json_result = get_request(url, dealerId=dealerId)
-    json_result = get_request(url)
-    #print(json_result)
+
     if json_result:
         # Get the row list in JSON as reviews
         reviews = json_result["data"]["docs"]
