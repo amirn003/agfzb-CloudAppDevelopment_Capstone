@@ -11,6 +11,83 @@
 
 </head>
     <body>
+      <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Dealership Review</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li>
+                  <a class="btn btn-link" href="{% url 'djangoapp:about' %}">About Us</a>
+                  <a class="btn btn-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+                  <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                  <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <form class="form-inline" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <a class="btn btn-link" href="{% url 'djangoapp:about' %}">About Us</a>
+                            <a class="btn btn-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+                            <input type="text" class="form-control" placeholder="Username" name="username" >
+                            <input type="password" class="form-control" placeholder="Password" name="psw" >
+                            <button class="btn btn-primary" type="submit">Login</button>
+                            <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                        </div>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+      </nav>
     <!--Add review form here -->
+    <form action="{% url 'djangoapp:add_review' dealer_id %}" method="post">
+      {% csrf_token %}
+      <h1>Review for {{dealer.full_name}}</h1>
+      <div class="form-group">
+          <label for="content">Enter the review content:</label>
+          <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
+          <label class="form-check-label" for="purchasecheck">Have you purchased a car from {{dealer.full_name}}?</label>
+      </div>
+      <div id="purchase-info" style="display: none;">
+          <div class="form-group">
+              <label for="car">Select your car (model-make-year):</label>
+              <select name="car" id="car" class="form-control" required>
+                  {% for car in cars %}
+                      <option value="{{ car.id }}">{{ car.name }}-{{ car.make.name }}-{{ car.year|date:"Y" }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="purchasedate">Select Your Purchase Date:</label>
+              <input class="form-control datepicker" type="text" name="purchasedate" id="purchasedate">
+          </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
     </body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#purchasecheck').change(function() {
+                if (this.checked) {
+                    $('#purchase-info').show();
+                } else {
+                    $('#purchase-info').hide();
+                }
+            });
+
+            $('.datepicker').datepicker({
+                format: 'mm/dd/yyyy',
+                autoclose: true
+            });
+        });
+    </script>
+
 </html>
