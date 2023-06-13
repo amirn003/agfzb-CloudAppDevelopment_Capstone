@@ -102,13 +102,19 @@ def get_index(request):
 
 def get_dealerships(request):
     if request.method == "GET":
+        context = {}
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/fdeb696a-7e2d-4899-9155-a4a235f9b6ba/dealership-package/dealership"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
+        context["dealerships"] = dealerships
+        print(dealerships)
+        # for dealer in dealerships:
+        #     print(dealer.id)
         # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        #dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        #return HttpResponse(dealer_names)
+        return render(request, 'djangoapp/index.html', context)
 
 def get_dealership_by_id(request, dealer_id):
     if request.method == "GET":
